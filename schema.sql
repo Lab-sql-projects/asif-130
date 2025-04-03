@@ -1,5 +1,5 @@
 -- Table for storing passenger details
-CREATE TABLE Passengers (
+CREATE TABLE IF NOT EXISTS Passengers (
     passenger_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE Passengers (
 );
 
 -- Table for storing flight details
-CREATE TABLE Flights (
+CREATE TABLE IF NOT EXISTS Flights (
     flight_id INT AUTO_INCREMENT PRIMARY KEY,
     flight_number VARCHAR(10) NOT NULL UNIQUE,
     departure_city VARCHAR(100) NOT NULL,
@@ -23,25 +23,25 @@ CREATE TABLE Flights (
 );
 
 -- Table for storing ticket details
-CREATE TABLE Tickets (
+CREATE TABLE IF NOT EXISTS Tickets (
     ticket_id INT AUTO_INCREMENT PRIMARY KEY,
     passenger_id INT NOT NULL,
     flight_id INT NOT NULL,
-    ticket_type VARCHAR(50) NOT NULL,  -- e.g., Economy, Business
+    ticket_type VARCHAR(50) NOT NULL,
     seat_number VARCHAR(5),
-    ticket_status VARCHAR(50) DEFAULT 'Booked', -- Can be 'Booked', 'Checked-in', 'Cancelled', etc.
+    ticket_status VARCHAR(50) DEFAULT 'Booked',
     booking_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (passenger_id) REFERENCES Passengers(passenger_id),
+    FOREIGN KEY (passenger_id) REFERENCES Passengers(passenger_id) ON DELETE CASCADE,
     FOREIGN KEY (flight_id) REFERENCES Flights(flight_id)
 );
 
 -- Table for storing payment details
-CREATE TABLE Payments (
+CREATE TABLE IF NOT EXISTS Payments (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
     ticket_id INT NOT NULL,
     payment_amount DECIMAL(10, 2) NOT NULL,
-    payment_method VARCHAR(50) NOT NULL,  -- e.g., 'Credit Card', 'PayPal', 'Bank Transfer'
+    payment_method VARCHAR(50) NOT NULL,
     payment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    payment_status VARCHAR(50) DEFAULT 'Pending', -- Can be 'Pending', 'Completed', 'Failed'
+    payment_status VARCHAR(50) DEFAULT 'Pending',
     FOREIGN KEY (ticket_id) REFERENCES Tickets(ticket_id)
 );
